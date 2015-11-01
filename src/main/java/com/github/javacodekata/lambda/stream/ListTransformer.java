@@ -2,9 +2,12 @@ package com.github.javacodekata.lambda.stream;
 
 import com.google.common.collect.ImmutableList;
 
+import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.stream.Collector;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -39,7 +42,11 @@ public class ListTransformer {
 	 * @return
 	 */
 	public List<Integer> getSortedIntegers() {
-		return values.stream().filter(element -> element.matches("[-+]?\\d*\\.?\\d+")).map(Integer::valueOf).sorted().collect(Collectors.toList());
+		return getNumericElements().sorted().collect(Collectors.toList());
+	}
+
+	private Stream<Integer> getNumericElements() {
+		return values.stream().filter(element -> element.matches("[-+]?\\d*\\.?\\d+")).map(Integer::valueOf);
 	}
 
 	/**
@@ -52,7 +59,9 @@ public class ListTransformer {
 	 * @return
 	 */
 	public List<Integer> getSortedDescendingIntegers() {
-		return new LinkedList<>();
+		return getNumericElements().sorted((firstElement, secondElement) -> Integer.compare(firstElement, secondElement))
+				.sorted()
+				.collect(Collectors.collectingAndThen(Collectors.toList(), (list) -> { Collections.reverse(list); return list;}));
 	}
 
 }
