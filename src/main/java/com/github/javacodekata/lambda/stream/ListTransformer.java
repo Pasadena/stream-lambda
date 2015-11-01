@@ -39,7 +39,7 @@ public class ListTransformer {
 	 * @return
 	 */
 	public List<Integer> getSortedIntegers() {
-		return new LinkedList<>();
+		return values.stream().filter(element -> element.matches("[-+]?\\d*\\.?\\d+")).map(Integer::valueOf).sorted().collect(Collectors.toList());
 	}
 
 	/**
